@@ -1,25 +1,36 @@
+import { Box, styled, TableCell, TableRow, Theme } from '@mui/material';
+import { ButtonStyledProps } from '../types/Type';
 
-import { Box, styled, TableCell, TableRow } from '@mui/material';
 
 export const FlexBox = styled(Box)({
     display : 'flex',
     justifyContent : 'space-between'
 })
 
-export const ButtonStyled = styled('button')({
-    backgroundColor : '#000',
-    padding : '16px',
-    color : '#FFF' ,
-    fontSize : '16px',
-    border : 0,
+const styleColor = {
+    "primary" : '#000',
+    "error" : '#F44336',
+    'warning' : '#FFA726',
+    'success' : '#209b24'
+}
+
+export const ButtonStyled = styled('button')(({ regular, variant, fullWidth }: ButtonStyledProps) => ({
+    backgroundColor: styleColor[variant || 'primary'],
+    padding: '8px 16px',
+    color: '#FFF',
+    fontSize: '20px',
+    width: fullWidth ? '100%' : 'auto',
+    textAlign : 'center',
+    border: 0,
+    transition: 'all',
+    transitionDuration: '300ms',
+    letterSpacing : '1px',
     cursor : 'pointer',
-    transition : 'all',
-    transitionDuration : '300ms',
-    '&:hover' : {
-        opacity : 0.7,
-        letterSpacing : '3px'
-    }
-})
+    '&:hover': {
+      opacity: 0.7,
+      letterSpacing: regular ? '1px' : '3px',
+    },
+  }));
 
 export const BoxContainer = styled(Box)({
     width : '600px',
@@ -46,12 +57,22 @@ export const TableCellBody = styled(TableCell)({
     padding : '20px',
 })
 
-export const TableRowBody = styled(TableRow)(({ twice }: { twice: boolean }) => ({
-    backgroundColor: twice ? '#BBBCB6' : '#FFF',
-    cursor : 'pointer',
-    transition : 'all',
-    transitionDuration : '300ms',
-    '&:hover' : {
-        opacity : 0.7
-    }
+export const TableRowBody = styled(TableRow)(({ theme }: { theme: Theme }) => ({
+    backgroundColor: '#FFF',
+    transition: 'all',
+    transitionDuration: '300ms',
+    '&:hover': {
+      opacity: 0.7,
+      backgroundColor: '#ACADA8',
+    },
+    '&.twice': {
+      backgroundColor: '#BBBCB6',
+    },
   }));
+  
+
+
+export const BoxForm = styled('form')({
+    width:'300px',
+    padding : '1rem'
+})

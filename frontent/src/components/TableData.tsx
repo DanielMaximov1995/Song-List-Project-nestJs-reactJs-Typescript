@@ -1,9 +1,12 @@
 import React from 'react'
-import { Song } from '../types/Song';
+import { Song } from '../types/Type';
 import { BoxTableContainer , TableCellBody, TableCellHeader, TableRowBody } from '../components/Styled Components';
-import {Table , TableBody, TableContainer , TableHead , TableRow , Paper} from '@mui/material';
+import {Table , TableBody, TableContainer , TableHead , TableRow , Paper , IconButton} from '@mui/material';
 
-const TableData = ({ songs } : { songs : Song[] }) => {
+const TableData = (props : { songs : Song[]; editData : (song : Song) => void }) => {
+  const { songs , editData } = props
+
+  const sortedData = [...songs].sort((a, b) => a.songName.localeCompare(b.songName));
 
   return (
     <BoxTableContainer>
@@ -18,12 +21,14 @@ const TableData = ({ songs } : { songs : Song[] }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {songs.map((song , index) => (
-            <TableRowBody twice={index % 2 === 0} key={song.id}>
+          {sortedData?.map((song , index) => (
+            <TableRowBody className={index % 2 === 0 ? 'twice' : ''} key={song.id}>
               <TableCellBody>{song.songName}</TableCellBody>
               <TableCellBody>{song.band}</TableCellBody>
               <TableCellBody>{song.year}</TableCellBody>
-              <TableCellBody>{song.year}</TableCellBody>
+              <TableCellBody>
+                <IconButton onClick={() => editData(song)} size='large' color='success'>✎</IconButton>
+                </TableCellBody>
             </TableRowBody>
           ))}
         </TableBody>

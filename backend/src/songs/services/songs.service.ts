@@ -33,7 +33,8 @@ export class SongsService {
 
   async createSong(createSongDto: CreateSongDto): Promise<Song> {
     try {
-      const song = this.songRepository.create(createSongDto);
+      const { songName , band } = createSongDto
+      const song = this.songRepository.create({...createSongDto , songName: songName.toLowerCase() , band : band.toLowerCase()});
       const createdSong = await this.songRepository.save(song);
       return createdSong;
     } catch (err) {
@@ -48,8 +49,8 @@ export class SongsService {
         return null;
       }
 
-      existingSong.songName = updateSongDto.songName || existingSong.songName;
-      existingSong.band = updateSongDto.band || existingSong.band;
+      existingSong.songName = updateSongDto.songName.toLowerCase() || existingSong.songName;
+      existingSong.band = updateSongDto.band.toLowerCase() || existingSong.band;
       existingSong.year = updateSongDto.year || existingSong.year;
 
       const updatedSong = await this.songRepository.save(existingSong);

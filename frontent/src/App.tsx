@@ -1,37 +1,68 @@
-import {useState , useEffect} from 'react';
-import { Box , Typography , Table , TableBody , TableCell , TableContainer , TableHead , TableRow , Paper} from '@mui/material';
-import { Song } from './types/Song';
-import { BoxContainer, BoxTableContainer , FlexBox, TableCellBody, TableCellHeader, TableRowBody , ButtonStyled } from './components/Styled Components';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Box, Typography } from '@mui/material';
+import { BoxContainer, FlexBox, ButtonStyled } from './components/Styled Components';
 import TableData from './components/TableData';
+import { RootState } from './features/store';
+import { fetchSongs } from './features/songs/songsThunks';
+import AddOrEdit from './components/Add or Edit';
+import { Song } from './types/Type';
 
 const App = () => {
-  const [songs, setSongs] = useState<Song[]>([])
+  const { isLoading , songs } = useSelector((state: RootState) => state.songs);
+  const dispatch = useDispatch();
+  const [openAddOrEdit, setOpenAddOrEdit] = useState(false)
+  const [editData, setEditData] = useState<Song>({
+    songName: "",
+    band: "",
+    year: 0,
+  });
+  const [editable, setEditable] = useState(false)
 
   useEffect(() => {
-    const getSongs = async () => {
-      try {
-        const data = await fetch("http://localhost:5000/songs");
-        const json = await data.json();
-        setSongs(json);
-      } catch (error) {
-        console.error("Error fetching songs:", error);
-      }
-    };
+    dispatch(fetchSongs() as any); 
+  }, [dispatch]);
 
-    getSongs();
-  }, []);
-  
+  const handleEditData = (song : Song | null) => {
+    setOpenAddOrEdit((prev) => !prev)
+    setEditable(prev => !prev)
+    if(song) {
+      setEditData(song)
+    }
+  }
+
+  const handleOpenNew = () => {
+    setOpenAddOrEdit((prev) => !prev)
+    setEditable(false)
+    setEditData({
+      songName: "",
+      band: "",
+      year: 0,
+    })
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    
+    setEditData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
 
   return (
     <BoxContainer>
       <FlexBox>
-        <Typography variant='h1' sx={{ textAlign : 'center' , fontSize : '40px' }}>My Playlist Songs</Typography>
-        <ButtonStyled>Add New Song</ButtonStyled>
+        <Typography variant='h1' sx={{ textAlign: 'center', fontSize: '40px' }}>My Playlist Songs</Typography>
+        <ButtonStyled onClick={() => setOpenAddOrEdit((prev : boolean) => !prev)}>Add New Song</ButtonStyled>
       </FlexBox>
-      <TableData songs={songs}/>
-
+      {
+        isLoading ? 'Loading...' : <TableData songs={songs} editData={(song: Song) => handleEditData(song)}/>
+      }
+      <AddOrEdit open={openAddOrEdit} handleOpen={() => handleOpenNew()} data={editData} handleChange={handleChange} editable={editable}/>
     </BoxContainer>
-  )
+  );
 }
 
-export default App
+export default App;

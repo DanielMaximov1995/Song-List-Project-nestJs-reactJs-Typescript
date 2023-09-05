@@ -47,7 +47,8 @@ let SongsService = class SongsService {
     }
     async createSong(createSongDto) {
         try {
-            const song = this.songRepository.create(createSongDto);
+            const { songName, band } = createSongDto;
+            const song = this.songRepository.create({ ...createSongDto, songName: songName.toLowerCase(), band: band.toLowerCase() });
             const createdSong = await this.songRepository.save(song);
             return createdSong;
         }
@@ -61,8 +62,8 @@ let SongsService = class SongsService {
             if (!existingSong) {
                 return null;
             }
-            existingSong.songName = updateSongDto.songName || existingSong.songName;
-            existingSong.band = updateSongDto.band || existingSong.band;
+            existingSong.songName = updateSongDto.songName.toLowerCase() || existingSong.songName;
+            existingSong.band = updateSongDto.band.toLowerCase() || existingSong.band;
             existingSong.year = updateSongDto.year || existingSong.year;
             const updatedSong = await this.songRepository.save(existingSong);
             return updatedSong;
