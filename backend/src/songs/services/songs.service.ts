@@ -10,15 +10,18 @@ import { CreateSongDto, UpdateSongDto } from "../../dtos/Song.dto";
 export class SongsService {
   constructor(@InjectRepository(Song) private readonly songRepository: Repository<Song>) {};
 
+  // Retrieve all songs from the database
   async getSongs(): Promise<Song[]> {
     try {
       const songs = await this.songRepository.find();
+      // Sort the songs by band name
       return songs.sort((a, b) => a.band.localeCompare(b.band));
     } catch (err) {
       throw new InternalServerErrorException(err.message || 'Error fetching songs');
     }
   }
 
+  // Retrieve a specific song by id
   async getSong(id: number): Promise<Song> {
     try {
       const song = await this.songRepository.findOneById(id);
@@ -31,9 +34,11 @@ export class SongsService {
     }
   }
 
+  // Create a new song
   async createSong(createSongDto: CreateSongDto): Promise<Song> {
     try {
-      const { songName , band } = createSongDto
+      const { songName , band } = createSongDto;
+      // Create a new song and save it to the database
       const song = this.songRepository.create({...createSongDto , songName: songName.toLowerCase() , band : band.toLowerCase()});
       const createdSong = await this.songRepository.save(song);
       return createdSong;
@@ -42,17 +47,20 @@ export class SongsService {
     }
   }
 
+  // Update an existing song by id
   async updateSong(id: number, updateSongDto: UpdateSongDto): Promise<Song | null> {
     try {
       const existingSong = await this.songRepository.findOneById(id);
       if (!existingSong) {
-        return null;
+        return null; // Return null if the song is not found
       }
 
+      // Update the song's attributes with the provided data
       existingSong.songName = updateSongDto.songName.toLowerCase() || existingSong.songName;
       existingSong.band = updateSongDto.band.toLowerCase() || existingSong.band;
       existingSong.year = updateSongDto.year || existingSong.year;
 
+      // Save the updated song to the database
       const updatedSong = await this.songRepository.save(existingSong);
       return updatedSong;
     } catch (err) {
@@ -60,8 +68,10 @@ export class SongsService {
     }
   }
 
+  // Delete a specific song by id
   async deleteSong(id: number): Promise<void> {
     try {
+      // Delete the song from the database and handle errors
       const result = await this.songRepository.delete(id);
       if (result.affected === 0) {
         throw new NotFoundException('Song not found');
@@ -71,19 +81,22 @@ export class SongsService {
     }
   }
 
+  // Check if the songs table is empty
   async isSongTableEmpty(): Promise<boolean> {
     try {
       const songsCount = await this.songRepository.count();
-      return songsCount === 0;
+      return songsCount === 0; // Return true if the table is empty
     } catch (err) {
       throw new InternalServerErrorException(err.message || 'Error checking songs table');
     }
   }
 
+  // Import data from a CSV file into the database
   async importDataFromCSV(filePath: string): Promise<void> {
     try {
       const results = [];
 
+      // Read and process data from the CSV file
       fs.createReadStream(filePath)
         .pipe(csv({ separator: ';' }))
         .on('data', (row) => {
@@ -98,6 +111,7 @@ export class SongsService {
             };
           });
 
+          // Save the imported songs to the database
           await this.songRepository.save(songsToSave);
         });
     } catch (err) {

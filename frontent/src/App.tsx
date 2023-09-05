@@ -20,9 +20,11 @@ const App = () => {
   const [editable, setEditable] = useState(false)
 
   useEffect(() => {
+    // Fetch songs data from the server when the component mounts
     dispatch(fetchSongs() as any); 
   }, [dispatch]);
 
+  // Function to handle editing a songs data
   const handleEditData = (song : Song | null) => {
     setOpenAddOrEdit((prev) => !prev)
     setEditable(prev => !prev)
@@ -31,6 +33,7 @@ const App = () => {
     }
   }
 
+  // Function to handle opening a new song form
   const handleOpenNew = () => {
     setOpenAddOrEdit((prev) => !prev)
     setEditable(false)
@@ -41,9 +44,9 @@ const App = () => {
     })
   }
 
+  // Function to handle input field changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    
     setEditData((prev) => ({
       ...prev,
       [name]: value,

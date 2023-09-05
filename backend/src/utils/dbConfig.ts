@@ -4,7 +4,6 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-
 const databaseConfig: TypeOrmModuleOptions = {
   type: 'mysql',
   host: process.env.DB_HOST,

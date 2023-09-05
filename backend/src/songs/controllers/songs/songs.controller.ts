@@ -11,18 +11,25 @@ import {
 } from "@nestjs/common";
 import { SongsService } from "../../services/songs.service";
 import { CreateSongDto, UpdateSongDto } from "../../../dtos/Song.dto";
+import { Song } from "src/typeorm/entities/Song";
 
 @Controller('songs')
 export class SongsController {
   constructor(private readonly songsService: SongsService) {}
 
+  // Route to retrieve all songs
   @Get()
-  async getAllSongs() {
+  async getAllSongs(): Promise<Song[]> {
     try {
+      // Check if there are songs in the database
       const isEmpty = await this.songsService.isSongTableEmpty();
+
       if (isEmpty) {
+        // If the database is empty, import data from CSV
         await this.songsService.importDataFromCSV('src/utils/files/Song_list.csv');
       }
+
+      // Get songs from the database
       const data = await this.songsService.getSongs();
       return data;
     } catch (err) {
@@ -30,6 +37,7 @@ export class SongsController {
     }
   }
 
+  // Route to retrieve a specific song by ID
   @Get(':id')
   async getSongById(@Param('id', ParseIntPipe) id: number) {
     try {
@@ -40,6 +48,7 @@ export class SongsController {
     }
   }
 
+  // Route to create a new song
   @Post()
   async createSong(@Body() createSongDto: CreateSongDto) {
     try {
@@ -50,6 +59,7 @@ export class SongsController {
     }
   }
 
+  // Route to update an existing song by id
   @Put(':id')
   async updateSong(
     @Param('id', ParseIntPipe) id: number,
@@ -68,7 +78,7 @@ export class SongsController {
     }
   }
 
-
+  // Route to delete a specific song by id
   @Delete(':id')
   async deleteById(@Param('id', ParseIntPipe) id: number) {
     try {
