@@ -22,10 +22,6 @@ let SongsController = class SongsController {
     }
     async getAllSongs() {
         try {
-            const isEmpty = await this.songsService.isSongTableEmpty();
-            if (isEmpty) {
-                await this.songsService.importDataFromCSV('src/utils/files/Song_list.csv');
-            }
             const data = await this.songsService.getSongs();
             return data;
         }

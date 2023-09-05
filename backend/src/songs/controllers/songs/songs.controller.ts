@@ -21,13 +21,13 @@ export class SongsController {
   @Get()
   async getAllSongs(): Promise<Song[]> {
     try {
-      // Check if there are songs in the database
-      const isEmpty = await this.songsService.isSongTableEmpty();
+      // // Check if there are songs in the database
+      // const isEmpty = await this.songsService.isSongTableEmpty();
 
-      if (isEmpty) {
-        // If the database is empty, import data from CSV
-        await this.songsService.importDataFromCSV('src/utils/files/Song_list.csv');
-      }
+      // if (isEmpty) {
+      //   // If the database is empty, import data from CSV
+      //   await this.songsService.importDataFromCSV('src/utils/files/Song_list.csv');
+      // }
 
       // Get songs from the database
       const data = await this.songsService.getSongs();

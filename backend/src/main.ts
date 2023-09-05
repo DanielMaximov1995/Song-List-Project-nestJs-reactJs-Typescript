@@ -1,14 +1,32 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
+import { SongsService } from "./songs/services/songs.service"; // Import the SongsService
 
 async function bootstrap() {
-  // Enable CORS for your application by setting the 'cors' option to true
   const app = await NestFactory.create(AppModule, { cors: true });
 
-  // Use a global validation pipe to automatically validate incoming request data
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(5000);
+
+  const port = process.env.PORT || 5000;
+
+  await app.listen(port, async () => {
+    console.log(`Server is running on port ${port}`);
+
+    // Initialize the SongsService to check and import data
+    const songsService = app.get(SongsService);
+
+    try {
+      const isEmpty = await songsService.isSongTableEmpty();
+      
+      if (isEmpty) {
+        await songsService.importDataFromCSV('src/utils/files/Song_list.csv');
+      }
+    } catch (error) {
+      console.error('Error during initialization:', error);
+    }
+  });
 }
 
 bootstrap();
+

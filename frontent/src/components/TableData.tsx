@@ -6,7 +6,7 @@ import {Table , TableBody, TableContainer , TableHead , TableRow , Paper , IconB
 const TableData = (props : { songs : Song[]; editData : (song : Song) => void }) => {
   const { songs , editData } = props
 
-  const sortedData = [...songs].sort((a, b) => a.songName.localeCompare(b.songName));
+  const sortedData = [...songs].sort((a, b) => a.band.localeCompare(b.band));
 
   return (
     <BoxTableContainer>

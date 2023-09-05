@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { BoxContainer, FlexBox, ButtonStyled } from './components/Styled Components';
 import TableData from './components/TableData';
 import { RootState } from './features/store';
@@ -57,7 +57,7 @@ const App = () => {
   return (
     <BoxContainer>
       <FlexBox>
-        <Typography variant='h1' sx={{ textAlign: 'center', fontSize: '40px' }}>My Playlist Songs</Typography>
+        <Typography variant='h1' sx={{ textAlign: 'center', fontSize: '40px' }}>My Playlist</Typography>
         <ButtonStyled onClick={() => setOpenAddOrEdit((prev : boolean) => !prev)}>Add New Song</ButtonStyled>
       </FlexBox>
       {

@@ -20,7 +20,7 @@ const AddOrEdit = (props: AddOrEditProps) => {
   // Function to handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(!data.songName || !data.band || data.year) {
+    if(!data.songName || !data.band || !data.year) {
       return toast.error('Do not leave blank fields...')
     }
 
