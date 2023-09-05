@@ -1,36 +1,36 @@
 import {useState , useEffect} from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { Box , Typography} from '@mui/material';
+import { Box , Typography , Table , TableBody , TableCell , TableContainer , TableHead , TableRow , Paper} from '@mui/material';
 import { Song } from './types/Song';
-
+import { BoxContainer, BoxTableContainer , FlexBox, TableCellBody, TableCellHeader, TableRowBody , ButtonStyled } from './components/Styled Components';
+import TableData from './components/TableData';
 
 const App = () => {
   const [songs, setSongs] = useState<Song[]>([])
 
   useEffect(() => {
     const getSongs = async () => {
-      const data = await fetch("http://localhost:5000/songs")
-      const json = await data.json()
-      setSongs(json);
-    }
+      try {
+        const data = await fetch("http://localhost:5000/songs");
+        const json = await data.json();
+        setSongs(json);
+      } catch (error) {
+        console.error("Error fetching songs:", error);
+      }
+    };
 
-    getSongs()
-  }, [])
+    getSongs();
+  }, []);
   
 
   return (
-    <div>
-      <ul>
-        {
-          songs.map((item) => (
-            <li key={item.id}>
-                {item.songName}
-            </li>
-          ))
-        }
-      </ul>
-    </div>
+    <BoxContainer>
+      <FlexBox>
+        <Typography variant='h1' sx={{ textAlign : 'center' , fontSize : '40px' }}>My Playlist Songs</Typography>
+        <ButtonStyled>Add New Song</ButtonStyled>
+      </FlexBox>
+      <TableData songs={songs}/>
+
+    </BoxContainer>
   )
 }
 

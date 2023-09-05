@@ -26,7 +26,8 @@ let SongsService = class SongsService {
     ;
     async getSongs() {
         try {
-            return await this.songRepository.find();
+            const songs = await this.songRepository.find();
+            return songs.sort((a, b) => a.band.localeCompare(b.band));
         }
         catch (err) {
             throw new common_1.InternalServerErrorException(err.message || 'Error fetching songs');
