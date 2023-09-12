@@ -18,7 +18,7 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const Song_1 = require("../../typeorm/entities/Song");
 const fs = require("fs");
-const csv = require("csv-parser");
+const csvParser = require("csv-parser");
 let SongsService = class SongsService {
     constructor(songRepository) {
         this.songRepository = songRepository;
@@ -96,7 +96,7 @@ let SongsService = class SongsService {
         try {
             const results = [];
             fs.createReadStream(filePath)
-                .pipe(csv({ separator: ';' }))
+                .pipe(csvParser({ separator: ';' }))
                 .on('data', (row) => {
                 results.push(row);
             })
