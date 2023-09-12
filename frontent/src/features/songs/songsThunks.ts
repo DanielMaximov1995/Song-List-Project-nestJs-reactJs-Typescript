@@ -1,5 +1,4 @@
 import { AppDispatch } from "../store";
-import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Song } from "../../types/Type";
 import { addSong, deleteSong, setLoading, setSongs, updateSong } from "./songsSlice";
 
@@ -7,7 +6,7 @@ import { addSong, deleteSong, setLoading, setSongs, updateSong } from "./songsSl
 export const fetchSongs = () => async (dispatch: AppDispatch) => {
   try {
     dispatch(setLoading()) // Set loading state to true
-    const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/songs`);
+    const response = await fetch(`http://localhost:5000/songs`);
     if (!response.ok) {
       throw new Error('Failed to fetch data');
     }
@@ -24,7 +23,7 @@ export const fetchSongs = () => async (dispatch: AppDispatch) => {
 export const fetchUpdateSong = (updatedSongData: Song) => async (dispatch: AppDispatch) => {
   try {
     dispatch(setLoading())
-    const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/songs/${updatedSongData.id}`, {
+    const response = await fetch(`http://localhost:5000/songs/${updatedSongData.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -50,7 +49,7 @@ export const fetchUpdateSong = (updatedSongData: Song) => async (dispatch: AppDi
 export const fetchAddSong = (newSongData: Song) => async (dispatch: AppDispatch) => {
   try {
     dispatch(setLoading())
-    const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/songs`, {
+    const response = await fetch(`http://localhost:5000/songs`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -77,7 +76,7 @@ export const fetchAddSong = (newSongData: Song) => async (dispatch: AppDispatch)
 export const fetchDeleteSong = (id: number) => async (dispatch: AppDispatch) => {
   try {
     dispatch(setLoading())
-    const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/songs/${id}`, {
+    const response = await fetch(`http://localhost:5000/songs/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
