@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Song } from "../../typeorm/entities/Song";
 import * as fs from 'fs';
-import * as csv from 'csv-parser';
+import * as csvParser from 'csv-parser';
 import { CreateSongDto, UpdateSongDto } from "../../dtos/Song.dto";
 
 @Injectable()
@@ -98,7 +98,7 @@ export class SongsService {
 
       // Read and process data from the CSV file
       fs.createReadStream(filePath)
-        .pipe(csv({ separator: ';' }))
+        .pipe(csvParser({ separator: ';' }))
         .on('data', (row) => {
           results.push(row);
         })
